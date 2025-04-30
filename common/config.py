@@ -1,0 +1,5 @@
+# Grid and map constants
+
+GRID_SIZE = 5
+TILE_SIZE = 100
+SCREEN_SIZE = GRID_SIZE * TILE_SIZE
