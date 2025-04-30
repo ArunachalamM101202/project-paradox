@@ -1,0 +1,8 @@
+pygame
+flask
+flask-socketio
+eventlet
+socketio
+requests
+sentence-transformers
+faiss-cpu

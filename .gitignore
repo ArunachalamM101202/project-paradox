@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+*.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Pygame/Temporary
+*.log
+*.tmp
+*.swp
+
+# macOS system files
+.DS_Store
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# FAISS index (if added later)
+*.faiss
+*.index
+
+# Ollama or model files
+*.bin
+*.jsonl
+*.ckpt
+models/
+checkpoints/
+
+# Compiled objects (future use)
+*.o
+*.out
+
+# Frontend media cache
+frontend/assets/__pycache__/
