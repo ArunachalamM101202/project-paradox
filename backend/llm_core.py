@@ -33,3 +33,19 @@ Reflect on these events and summarize three key high-level insights as a single 
         messages=[{"role": "user", "content": prompt}]
     )
     return [f"Reflection: {response['message']['content'].strip()}"]
+
+
+def summarize_memories(agent_name: str, memories: list):
+    text = "\n".join([f"- {m.text}" for m in memories])
+    prompt = f"""
+You are {agent_name}. The following are multiple short memories.
+
+{text}
+
+Summarize these into one concise memory entry in paragraph form. Be abstract and high-level, but accurate.
+"""
+    response = ollama.chat(
+        model="llama3",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response['message']['content'].strip()

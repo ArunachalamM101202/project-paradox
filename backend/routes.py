@@ -17,6 +17,9 @@ from fastapi import Query
 
 from belief_emotion_engine import adjust_belief_and_emotion
 
+from compression_engine import compress_memory
+from agent_controller import long_term_memory
+
 router = APIRouter()
 
 class ObservationInput(BaseModel):
@@ -149,3 +152,19 @@ def run_test_scenario():
     )
 
     return {"status": "Scenario injected"}
+
+@router.post("/agent/{name}/compress")
+def compress(name: str):
+    agent = get_agent_state(name)
+    store = long_term_memory[name]
+    summary_item = compress_memory(agent, store)
+    if summary_item:
+        return {"summary": summary_item.text}
+    
+    print(f"[FAISS] Added summary: {summary_item.text}")
+    return {"status": "Not enough to compress or already compressed"}
+
+@router.get("/agent/{name}/longterm")
+def retrieve_longterm(name: str, q: str = Query(...)):
+    results = long_term_memory[name].retrieve(q)
+    return [m.text for m in results]

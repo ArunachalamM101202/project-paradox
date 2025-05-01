@@ -128,12 +128,63 @@ You’ll finally see:
 
 🎯 GOAL
 
-Let agents adjust trust and emotion over time based on:
-	•	Direct observations
-	•	Contradictions
-	•	Conversation tone
+Create a modular, score-based system that lets agents:
 
-This gives you:
-	•	👁️ Belief table updates (Anna: 7.0 → 4.5)
-	•	💢 Emotional shifts (suspicion +0.3, anger +0.2)
-	•	🔄 Memory-to-belief/emotion feedback
+	•	Adjust belief (trust) in other agents
+	•	Adjust emotions like suspicion, stress, anger
+	•	Trigger these updates from memory events and dialogue
+
+⸻
+
+✅ What We’ll Build
+
+🔸 1. Emotion + Belief Hooks
+
+When a memory is logged (via /observe or /dialogue), we:
+	•	Analyze the content
+	•	Adjust the agent’s belief_scores
+	•	Adjust their emotion_vector
+
+🔸 2. Add REST API:
+	•	/agent/{name}/update-belief-emotion
+
+Processes existing memory and updates state
+
+🔸 3. Add LLM hook (optional override)
+
+Ask: “How should John feel about Anna based on this?”
+
+⸻
+
+🧱 Update Strategy (Lightweight & Modular)
+
+To keep things flexible:
+	•	All emotion + belief updates go into a single helper file:
+belief_emotion_engine.py
+	•	This file is auto-called whenever an observe or dialogue_end happens
+
+
+ Phase 8: Memory Compression + RAG (FAISS) Integration
+
+⸻
+
+🎯 GOAL
+
+Agents store tons of events over time. We now:
+
+	•	Offload old memory into compressed summaries
+	•	Store embeddings via FAISS
+	•	Retrieve contextually relevant memories for planning, reacting, etc.
+
+This mimics:
+	•	💾 Short-term memory → agent.memory (live)
+	•	📚 Long-term memory → summarized + vectorized via FAISS
+	•	🧠 Use both during LLM prompts for plan, react, reflect
+
+
+✅ What We’ll Build
+	1.	🔁 Move old memory (>N) into summary
+	2.	🧠 Run LLM compression: summarize 3–5 logs into 1 compressed item
+	3.	💾 Store compressed text + FAISS embedding
+	4.	🔍 Add retrieve_memories(query) → RAG from compressed memory
+	5.	🔌 Update /plan, /react, /reflect to optionally include top-K relevant past summaries
