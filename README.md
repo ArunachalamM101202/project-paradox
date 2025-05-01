@@ -67,4 +67,21 @@ We’ll also:
 	•	Prompt LLM to summarize a dialogue from one agent’s perspective
 	•	Add to their memory as MemoryItem
 
+PHASE 3 Summary:
+✅ Memory Structure Breakdown:
+	•	Agent: John
+	•	Memory: Includes a personalized LLM summary of the dialogue
+	•	Belief scores: Empty for now (we’ll use this in Phase 4)
+	•	Emotion vector: Untouched so far (also Phase 4+)
 
+
+PHASE 4 SUMMARY
+
+✅ What We’ll Build
+	1.	🔧 Add plan field to AgentState
+	2.	✍️ Create LLM-powered daily planner
+	3.	🔄 Add reaction override logic (based on memory/emotion/belief)
+	4.	🌐 REST APIs to:
+	•	Get current plan
+	•	Generate a new plan
+	•	React to an observation
