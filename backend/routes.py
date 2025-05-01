@@ -7,6 +7,9 @@ from dialogue_manager import start_dialogue, add_dialogue_line, end_dialogue
 from llm_core import generate_summary
 from agent_controller import get_agent_state
 
+from planner import generate_plan, react_override
+from agent_controller import get_agent_state
+
 router = APIRouter()
 
 class ObservationInput(BaseModel):
@@ -49,11 +52,6 @@ def update_emotion(name: str, em: EmotionUpdate):
     agent.update_emotion(em.updates)
     return {"emotion": agent.emotion_vector}
 
-
-
-
-
-
 @router.post("/dialogue/start")
 def dialogue_start(a1: str, a2: str):
     start_dialogue(a1, a2)
@@ -73,3 +71,18 @@ def dialogue_end(a1: str, a2: str):
         agent_obj = get_agent_state(agent)
         agent_obj.log_observation(f"Conversation with {partner}: {summary}", importance=6, linked_agent=partner)
     return {"status": "ended", "lines": transcript}
+
+@router.post("/agent/{name}/plan")
+def make_plan(name: str):
+    agent = get_agent_state(name)
+    plan = generate_plan(agent)
+    agent.plan = plan
+    return {"plan": plan}
+
+@router.post("/agent/{name}/react")
+def react_plan(name: str):
+    agent = get_agent_state(name)
+    new_plan = react_override(agent)
+    if new_plan != "KEEP CURRENT PLAN":
+        agent.plan = new_plan
+    return {"plan": agent.plan}
