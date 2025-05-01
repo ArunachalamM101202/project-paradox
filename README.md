@@ -188,3 +188,33 @@ This mimics:
 	3.	💾 Store compressed text + FAISS embedding
 	4.	🔍 Add retrieve_memories(query) → RAG from compressed memory
 	5.	🔌 Update /plan, /react, /reflect to optionally include top-K relevant past summaries
+
+
+Phase 9: Finalizing RAG-Integrated Reasoning (Plan / React / Reflect)
+
+⸻
+
+🎯 GOAL
+
+Let agents reason with both:
+
+	•	🔁 Recent live memory (agent.memory[-5:])
+	•	📚 Relevant long-term summaries (via FAISS RAG)
+
+This ensures:
+	•	Real-time context awareness
+	•	Episodic memory generalization
+	•	Zero hallucination when recalling older events
+
+API
+Why Include RAG?
+Use Top-K RAG?
+/plan
+Need long-term consistency
+✅ Yes
+/react
+Need historical contradictions
+✅ Yes
+/reflect
+Already uses 100 items directly
+❌ No (skip)

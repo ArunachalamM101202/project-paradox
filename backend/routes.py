@@ -20,6 +20,8 @@ from belief_emotion_engine import adjust_belief_and_emotion
 from compression_engine import compress_memory
 from agent_controller import long_term_memory
 
+from llm_core import react_override
+
 router = APIRouter()
 
 class ObservationInput(BaseModel):
@@ -86,20 +88,18 @@ def dialogue_end(a1: str, a2: str):
     return {"status": "ended", "lines": transcript}
 
 @router.post("/agent/{name}/plan")
-def make_plan(name: str):
+def set_plan(name: str):
     agent = get_agent_state(name)
-    plan = generate_plan(agent)
-    agent.plan = plan
-    return {"plan": plan}
-
-@router.post("/agent/{name}/react")
-def react_plan(name: str):
-    agent = get_agent_state(name)
-    new_plan = react_override(agent)
-    if new_plan != "KEEP CURRENT PLAN":
-        agent.plan = new_plan
+    agent.plan = generate_plan(agent, long_term_memory[name])
     return {"plan": agent.plan}
 
+@router.post("/agent/{name}/react")
+def react(name: str):
+    agent = get_agent_state(name)
+    result = react_override(agent, long_term_memory[name])
+    if result.startswith("NEW PLAN:"):
+        agent.plan = result.replace("NEW PLAN:", "").strip()
+    return {"plan": agent.plan}
 
 
 @router.post("/agent/{name}/reflect")
