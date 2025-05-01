@@ -10,6 +10,11 @@ from agent_controller import get_agent_state
 from planner import generate_plan, react_override
 from agent_controller import get_agent_state
 
+from reflection_engine import reflect
+from memory_index import MemoryIndex
+from agent_controller import get_agent_state
+from fastapi import Query
+
 router = APIRouter()
 
 class ObservationInput(BaseModel):
@@ -86,3 +91,17 @@ def react_plan(name: str):
     if new_plan != "KEEP CURRENT PLAN":
         agent.plan = new_plan
     return {"plan": agent.plan}
+
+
+
+@router.post("/agent/{name}/reflect")
+def run_reflection(name: str):
+    return reflect(name)
+
+@router.get("/agent/{name}/retrieve")
+def retrieve_memories(name: str, q: str = Query(...)):
+    agent = get_agent_state(name)
+    index = MemoryIndex()
+    index.add_memories(agent.memory)
+    results = index.search(q)
+    return [{"text": m.text, "score": s} for m, s in results]

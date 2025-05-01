@@ -85,3 +85,19 @@ PHASE 4 SUMMARY
 	•	Get current plan
 	•	Generate a new plan
 	•	React to an observation
+
+
+PHASE 5 GOAL
+
+Give each agent the ability to reflect periodically on their past events and generate high-level insights, and to retrieve relevant memories using a Recency, Relevance, and Importance (BERRI) weighted scoring system.
+
+⸻
+
+✅ What We’ll Do
+	1.	Add FAISS to index agent memory embeddings.
+	2.	Create a RAG (Retrieval-Augmented Generation) system to fetch top-K relevant memories using cosine similarity.
+	3.	Implement Reflection Trigger Logic:
+	•	If recent memories cross importance threshold, summarize them via LLM.
+	4.	Add REST endpoints:
+	•	GET /agent/{name}/retrieve?q=...
+	•	POST /agent/{name}/reflect
