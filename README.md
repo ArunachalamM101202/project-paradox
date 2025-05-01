@@ -121,3 +121,19 @@ You’ll finally see:
 	2.	Let agents talk using dialogue API
 	3.	Trigger /reflect + /react to see deduction happen
 	4.	Final: use /state to see if belief/emotion updated
+
+🧠 Phase 7: Belief Scoring + Emotion Feedback Loop
+
+⸻
+
+🎯 GOAL
+
+Let agents adjust trust and emotion over time based on:
+	•	Direct observations
+	•	Contradictions
+	•	Conversation tone
+
+This gives you:
+	•	👁️ Belief table updates (Anna: 7.0 → 4.5)
+	•	💢 Emotional shifts (suspicion +0.3, anger +0.2)
+	•	🔄 Memory-to-belief/emotion feedback

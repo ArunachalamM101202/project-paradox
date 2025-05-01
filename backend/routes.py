@@ -15,6 +15,8 @@ from memory_index import MemoryIndex
 from agent_controller import get_agent_state
 from fastapi import Query
 
+from belief_emotion_engine import adjust_belief_and_emotion
+
 router = APIRouter()
 
 class ObservationInput(BaseModel):
@@ -43,6 +45,9 @@ def get_state(name: str):
 def log_observation(name: str, obs: ObservationInput):
     agent = get_agent_state(name)
     agent.log_observation(obs.text, obs.importance, obs.linked_agent)
+
+    adjust_belief_and_emotion(agent, agent.memory[-1])
+
     return {"status": "ok", "memory_count": len(agent.memory)}
 
 @router.post("/agent/{name}/belief")
@@ -106,6 +111,15 @@ def retrieve_memories(name: str, q: str = Query(...)):
     results = index.search(q)
     return [{"text": m.text, "score": s} for m, s in results]
 
+@router.post("/agent/{name}/update-belief-emotion")
+def update_belief_emotion(name: str):
+    agent = get_agent_state(name)
+    for mem in agent.memory[-5:]:  # process last 5
+        adjust_belief_and_emotion(agent, mem)
+    return {
+        "belief_scores": agent.belief_scores,
+        "emotion_vector": agent.emotion_vector
+    }
 
 @router.post("/scenario/test1")
 def run_test_scenario():
