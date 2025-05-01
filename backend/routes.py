@@ -105,3 +105,33 @@ def retrieve_memories(name: str, q: str = Query(...)):
     index.add_memories(agent.memory)
     results = index.search(q)
     return [{"text": m.text, "score": s} for m, s in results]
+
+
+@router.post("/scenario/test1")
+def run_test_scenario():
+    # 1. Anna sneaks near the vault
+    get_agent_state("Anna").log_observation(
+        "Anna went near the vault quietly.", importance=6
+    )
+
+    # 2. Arun observes Anna
+    get_agent_state("Arun").log_observation(
+        "Arun saw Anna sneaking near the vault.", importance=6, linked_agent="Anna"
+    )
+
+    # 3. Arun tells John
+    get_agent_state("John").log_observation(
+        "Arun told me that Anna was sneaking near the vault.", importance=7, linked_agent="Anna"
+    )
+
+    # 4. Anna lies to John
+    get_agent_state("Anna").log_observation(
+        "John asked if I was near the vault. I said no, even though I was.", importance=8, linked_agent="John"
+    )
+
+    # 5. John observes the contradiction
+    get_agent_state("John").log_observation(
+        "Anna told me she was never near the vault. That contradicts what Arun said.", importance=9, linked_agent="Anna"
+    )
+
+    return {"status": "Scenario injected"}

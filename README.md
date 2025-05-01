@@ -101,3 +101,23 @@ Give each agent the ability to reflect periodically on their past events and gen
 	4.	Add REST endpoints:
 	•	GET /agent/{name}/retrieve?q=...
 	•	POST /agent/{name}/reflect
+
+
+
+Phase 6 — Scripted Scenario + Deduction Loop
+
+This is where you bring all systems together for a full simulation cycle:
+
+You’ll finally see:
+	•	🧠 Agents make a plan
+	•	🗣️ Talk and remember
+	•	🤨 Reflect on what happened
+	•	🤯 React if things seem off
+	•	🧾 Build suspicion through memory
+
+✅ What We’ll Build
+	1.	Add an API: POST /scenario/test1
+→ Inject 3–4 scripted memories (some true, some false)
+	2.	Let agents talk using dialogue API
+	3.	Trigger /reflect + /react to see deduction happen
+	4.	Final: use /state to see if belief/emotion updated

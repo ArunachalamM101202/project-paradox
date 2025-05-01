@@ -21,18 +21,15 @@ Summary (1-2 sentences):"""
 def generate_reflection(agent_name: str, memories: list):
     formatted = "\n".join([f"{i+1}. {m.text}" for i, m in enumerate(memories)])
     prompt = f"""
-You are {agent_name}. Here are your recent observations:
+You are {agent_name}, an NPC in a social deduction game.
 
+Here are your recent observations:
 {formatted}
 
-What are 3 high-level insights or thoughts you have based on these observations? Format like:
-- <insight>
-- <insight>
-- <insight>
+Reflect on these events and summarize three key high-level insights as a single paragraph. Be concise, stay in-character, and do not list bullet points or preamble. Just write the reflection as one flowing paragraph.
 """
     response = ollama.chat(
         model="llama3",
         messages=[{"role": "user", "content": prompt}]
     )
-    lines = response['message']['content'].split("\n")
-    return [line.strip("- ").strip() for line in lines if line.strip()]
+    return [f"Reflection: {response['message']['content'].strip()}"]

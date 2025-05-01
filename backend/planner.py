@@ -20,24 +20,30 @@ Format: <Agent> plans to <do something>. Do not include explanations or lists.
     return response['message']['content'].strip()
 
 def react_override(agent: AgentState) -> str:
+    print(f"Current plan: {agent.plan}\n\n")
     prompt = f"""
 You are {agent.name}, an NPC in a social deduction game.
 
-Current plan: {agent.plan}
-Recent emotional state: {agent.emotion_vector}
-Recent memories:
+Your current plan is: {agent.plan}
+
+Recent emotional state:
+{agent.emotion_vector}
+
+Your last 3 observations:
 {chr(10).join([f"- {m.text}" for m in agent.memory[-3:]])}
 
-Check if the agent's plan should change. If nothing is suspicious, or similar to current plan then respond exactly: KEEP CURRENT PLAN
+Decide if the current plan still makes sense given the new information. If it's already covering the situation, reply exactly: KEEP CURRENT PLAN.
 
-If something recently happened that might cause suspicion or change in behavior, return a NEW plan in this format:
+If there's new information (e.g., contradictions, deception, threats) that require a different response, return a NEW PLAN in this format:
 
-NEW PLAN: <one sentence action, concise and in-character>.
+NEW PLAN: <one sentence action, concise and in-character.>
 
-Avoid explanation or context. Just the directive.
+DO NOT explain anything — just return the directive.
 """
     response = ollama.chat(
         model="llama3",
         messages=[{"role": "user", "content": prompt}]
     )
+    print(response['message']['content'])  # for debugging only
+    print("\n\n")
     return response['message']['content'].strip()
