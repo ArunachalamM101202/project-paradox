@@ -1,220 +1,59 @@
-### **Phase 1: Core Framework Setup**
+# Project Paradox
 
-**Goal**: Pygame + Flask + WebSocket base environment
-
-1. ✅ Create Pygame window with fixed-size map (3 zones: garden, hall, vault)
-2. ✅ Place 3 named NPCs with avatars
-3. ✅ Set up Flask REST server and Flask-SocketIO for bidirectional comm
-4. ✅ Pygame sends:
-    - Agent positions
-    - Tick updates
-5. ✅ Server sends:
-    - Actions to perform
-    - Dialogues to display
-6. ✅ Test:
-    - Move NPC from A to B
-    - Print JSON response in console
-    - Trigger dummy dialogue
-7. ✅ Log output: All actions + dialogues
-
-
-### WORKING ON PHASE 1
-	1.	Set up a modular FastAPI backend with REST + WebSocket support.
-	2.	Pygame visualizes 3 fixed-position NPCs on a grid.
-	3.	Agents move when server sends a command (walk to X).
-	4.	Pygame emits real-time position updates over WebSocket.
-	5.	All components (backend, state, comms) are cleanly decoupled for future scaling.
-
-
-🎯 PHASE 2 GOAL
-
-Give each agent a modular internal brain that includes:
-
-	•	✅ A memory stream (observations, dialogues, reflections)
-	•	✅ A belief table (trust scores for other agents)
-	•	✅ An emotion vector (quantified feelings toward events)
-
-We’ll also:
-	•	Expose this via REST APIs (e.g., GET /agent/John/state)
-	•	Send dummy observations to test belief/emotion/memory updates
-	•	Lay the foundation for reflection + planning in future phases
-
-
-
-🧠 PHASE 3: Dialogue + Event Logging + Summary
+Project Paradox is a scalable, plug-and-play multi-agent AI framework designed to bring intelligent, emotionally aware, and memory-driven agents to life in any game or interactive simulation. Developed at Supercell’s AI Innovation Lab, Project Paradox combines cutting-edge LLM orchestration, vector memory subsystems, and modular backend APIs to enable lifelike planning, spatial reasoning, and emergent behavior.
 
 ⸻
 
-🎯 Goal
-	•	Enable agents to talk via LLM-generated dialogue.
-	•	Log all dialogue lines + create a named transcript file (e.g., dialog_john_anna).
-	•	After conversation ends, each agent generates a personal summary of the interaction.
-	•	Store that summary in their observation memory using log_observation.
+## Key Features
 
-📦 WHAT WE’LL BUILD
-
-✅ Dialogue Manager (dialogue_manager.py)
-	•	Stores ongoing dialogue
-	•	Logs every line with timestamp
-	•	Ends dialogue, returns full history
-
-✅ New REST endpoints
-	•	POST /dialogue/start
-	•	POST /dialogue/speak
-	•	POST /dialogue/end
-
-✅ Summary generation using Ollama (LLM)
-	•	Prompt LLM to summarize a dialogue from one agent’s perspective
-	•	Add to their memory as MemoryItem
-
-PHASE 3 Summary:
-✅ Memory Structure Breakdown:
-	•	Agent: John
-	•	Memory: Includes a personalized LLM summary of the dialogue
-	•	Belief scores: Empty for now (we’ll use this in Phase 4)
-	•	Emotion vector: Untouched so far (also Phase 4+)
-
-
-PHASE 4 SUMMARY
-
-✅ What We’ll Build
-	1.	🔧 Add plan field to AgentState
-	2.	✍️ Create LLM-powered daily planner
-	3.	🔄 Add reaction override logic (based on memory/emotion/belief)
-	4.	🌐 REST APIs to:
-	•	Get current plan
-	•	Generate a new plan
-	•	React to an observation
-
-
-PHASE 5 GOAL
-
-Give each agent the ability to reflect periodically on their past events and generate high-level insights, and to retrieve relevant memories using a Recency, Relevance, and Importance (BERRI) weighted scoring system.
+Agent Intelligence
+	•	Modular Cognitive Stack:
+	•	Long-term memory with FAISS-based vector store (1M+ embeddings supported)
+	•	Agent-specific beliefs, emotions, and personality vectors
+	•	Dynamic planning and reflection loop triggered by memory
+	•	Conversational AI:
+	•	LLM-agnostic architecture: works with GPT, Gemini, LLaMA, Claude, or any open-source model
+	•	Agents speak in-character with contextual awareness of the world and their past
 
 ⸻
 
-✅ What We’ll Do
-	1.	Add FAISS to index agent memory embeddings.
-	2.	Create a RAG (Retrieval-Augmented Generation) system to fetch top-K relevant memories using cosine similarity.
-	3.	Implement Reflection Trigger Logic:
-	•	If recent memories cross importance threshold, summarize them via LLM.
-	4.	Add REST endpoints:
-	•	GET /agent/{name}/retrieve?q=...
-	•	POST /agent/{name}/reflect
-
-
-
-Phase 6 — Scripted Scenario + Deduction Loop
-
-This is where you bring all systems together for a full simulation cycle:
-
-You’ll finally see:
-	•	🧠 Agents make a plan
-	•	🗣️ Talk and remember
-	•	🤨 Reflect on what happened
-	•	🤯 React if things seem off
-	•	🧾 Build suspicion through memory
-
-✅ What We’ll Build
-	1.	Add an API: POST /scenario/test1
-→ Inject 3–4 scripted memories (some true, some false)
-	2.	Let agents talk using dialogue API
-	3.	Trigger /reflect + /react to see deduction happen
-	4.	Final: use /state to see if belief/emotion updated
-
-🧠 Phase 7: Belief Scoring + Emotion Feedback Loop
+World Awareness
+	•	Spatial Context Modeling:
+	•	Agents know where they are, who is near them, and what objects are present
+	•	Location-aware behavior and dialogue grounded in real-time game state
+	•	Dynamic Story Trigger System:
+	•	Broadcast in-world events (e.g., parties, disasters, deaths)
+	•	Agents update memory, react emotionally, and change plans autonomously
+	•	Universal Game Prompt Framework:
+	•	Generate entire gameplay scenarios from a single natural language prompt
+	•	Example: instantly spin up a murder mystery, cozy sim, or survival game by changing one line
 
 ⸻
 
-🎯 GOAL
-
-Create a modular, score-based system that lets agents:
-
-	•	Adjust belief (trust) in other agents
-	•	Adjust emotions like suspicion, stress, anger
-	•	Trigger these updates from memory events and dialogue
-
-⸻
-
-✅ What We’ll Build
-
-🔸 1. Emotion + Belief Hooks
-
-When a memory is logged (via /observe or /dialogue), we:
-	•	Analyze the content
-	•	Adjust the agent’s belief_scores
-	•	Adjust their emotion_vector
-
-🔸 2. Add REST API:
-	•	/agent/{name}/update-belief-emotion
-
-Processes existing memory and updates state
-
-🔸 3. Add LLM hook (optional override)
-
-Ask: “How should John feel about Anna based on this?”
+Backend Architecture
+	•	FastAPI microservices powering:
+	•	Memory management
+	•	LLM response orchestration
+	•	World-state sync with game engine (Unity, Unreal, Web, etc.)
+	•	FAISS-powered Retrieval System:
+	•	High-dimensional similarity search for memory recall
+	•	Embedding compression + agent-specific storage
+	•	Plug-and-play APIs:
+	•	/memory, /plan, /dialogue, /summary, /location, and more
+	•	Easy integration with game engines or simulation environments
 
 ⸻
 
-🧱 Update Strategy (Lightweight & Modular)
-
-To keep things flexible:
-	•	All emotion + belief updates go into a single helper file:
-belief_emotion_engine.py
-	•	This file is auto-called whenever an observe or dialogue_end happens
-
-
- Phase 8: Memory Compression + RAG (FAISS) Integration
+Platform Compatibility
+	•	✅ Unity, Unreal Engine, Godot
+	•	✅ Web, Mobile, VR/AR
+	•	✅ Deployable to any cloud platform or run entirely offline on-device
+	•	✅ Works with local LLM inference (e.g., Ollama, llama.cpp) or hosted APIs (OpenAI, Gemini, Claude)
 
 ⸻
 
-🎯 GOAL
-
-Agents store tons of events over time. We now:
-
-	•	Offload old memory into compressed summaries
-	•	Store embeddings via FAISS
-	•	Retrieve contextually relevant memories for planning, reacting, etc.
-
-This mimics:
-	•	💾 Short-term memory → agent.memory (live)
-	•	📚 Long-term memory → summarized + vectorized via FAISS
-	•	🧠 Use both during LLM prompts for plan, react, reflect
-
-
-✅ What We’ll Build
-	1.	🔁 Move old memory (>N) into summary
-	2.	🧠 Run LLM compression: summarize 3–5 logs into 1 compressed item
-	3.	💾 Store compressed text + FAISS embedding
-	4.	🔍 Add retrieve_memories(query) → RAG from compressed memory
-	5.	🔌 Update /plan, /react, /reflect to optionally include top-K relevant past summaries
-
-
-Phase 9: Finalizing RAG-Integrated Reasoning (Plan / React / Reflect)
-
-⸻
-
-🎯 GOAL
-
-Let agents reason with both:
-
-	•	🔁 Recent live memory (agent.memory[-5:])
-	•	📚 Relevant long-term summaries (via FAISS RAG)
-
-This ensures:
-	•	Real-time context awareness
-	•	Episodic memory generalization
-	•	Zero hallucination when recalling older events
-
-API
-Why Include RAG?
-Use Top-K RAG?
-/plan
-Need long-term consistency
-✅ Yes
-/react
-Need historical contradictions
-✅ Yes
-/reflect
-Already uses 100 items directly
-❌ No (skip)
+Future Work
+	•	Reinforcement Learning for long-term planning
+	•	Multi-agent belief propagation and theory of mind modeling
+	•	Auto-curated memory pruning and episodic summarization
+	•	Integration with physical robots and embodied agents
