@@ -2,6 +2,8 @@
 
 Project Paradox is a scalable, plug-and-play multi-agent AI framework designed to bring intelligent, emotionally aware, and memory-driven agents to life in any game or interactive simulation. Developed at Supercell's AI Innovation Lab, Project Paradox combines cutting-edge LLM orchestration, vector memory subsystems, and modular backend APIs to enable lifelike planning, spatial reasoning, and emergent behavior.
 
+**[View Demo](https://www.youtube.com/watch?v=_LdutpKmYlw)**
+
 ---
 
 ## Key Features
